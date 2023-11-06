@@ -1,14 +1,14 @@
 <section class="post">
     {{!-- make each post clickable ? and use that for routes/controllers --}}
     <a href="">
-        <header>{{title}}</header>
+        <header>{{title}} by: {{user_id}}</header>
         <div class="post-body">
             <div>
                 {{text}}
             </div>
-            <div>
+            {{!-- <div>
                 {{user_id}}
-            </div>
+            </div> --}}
         </div>
     </a>
 
