@@ -1,16 +1,20 @@
 const router = require('express').Router();
 const {User, Post, Comment } = require('../models');
+const withAuth = require('../utils/auth');
 
 //use utils for auth ?!!
 
 router.get('/', async (req, res) => {
     try {
-        const dbPostsData = await Post.findAll();
+        const dbPostsData = await Post.findAll({
+            include: User
+        });
+        console.log("dbPostsData with user: ", dbPostsData);
         const postsData = dbPostsData.map((post)=> {
             return post.get({ plain: true});
         });
-        
-        // console.log("postData: ", postsData);
+        console.log("PostsData with user: ", postsData);
+        console.log("postData: ", postsData);
         res.render('home', {
             postsData,
             loggedIn: req.session.loggedIn,
@@ -18,7 +22,7 @@ router.get('/', async (req, res) => {
 
     } catch (err) {
         console.log(err);
-        res.status.json(err);
+        res.status(500).json(err);
     }
 });
 
@@ -30,22 +34,6 @@ router.get('/login', async (req, res) => {
 
   res.render('login');
 
-    
-    // try {
-    //     const dbPostsData = await Post.findAll();
-    //     // console.log("dbPostData: ", dbPostsData);
-    //     // const postsData = dbPostsData.map((post)=> {
-    //     //     // console.log("inside map: with post: ", post);
-    //     //     return post.get({ plain: true});
-    //     // });
-        
-    //     // console.log("postData: ", postsData);
-    //     res.render('login');
-
-    // } catch (err) {
-    //     console.log(err);
-    //     res.status.json(err);
-    // }
 });
 
 router.get("/signin", async (req, res) => {
@@ -58,23 +46,24 @@ router.get("/signin", async (req, res) => {
 });
 
 
-router.get('/dashboard', async (req, res) => {
+router.get('/dashboard', withAuth, async (req, res) => {
     try {
-        console.log('req : ',req);
-        console.log('res : ',res);
-        const dbPostsData = await Post.findAll();
-        // console.log("dbPostData: ", dbPostsData);
+        const dbUserData = await User.findByPk(req.session.userId,{
+            include: [Post]});
+        console.log("dbPostData: ", dbUserData);
+        console.log('check if re has session and loggedin !!', req.session.loggedIn);
+        const userData = dbUserData.get({plain: true})
         // const postsData = dbPostsData.map((post)=> {
         //     // console.log("inside map: with post: ", post);
         //     return post.get({ plain: true});
         // });
         
-        // console.log("postData: ", postsData);
+        console.log("userData: ", userData);
         res.render('dashboard');
 
     } catch (err) {
         console.log(err);
-        res.status.json(err);
+        res.status(500).json(err);
     }
 });
 

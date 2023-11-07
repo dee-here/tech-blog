@@ -45,7 +45,7 @@ User.init(
       },
     },
     sequelize,
-    timestamps: false,
+    timestamps: false, //set this to false !!!  TEST
     freezeTableName: true,
     underscored: true,
     modelName: 'user',
