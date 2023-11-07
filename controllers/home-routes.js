@@ -115,20 +115,29 @@ router.get('/post/:id', withAuth, async (req, res) => {
 
         const postId = req.params.id;
         const dbPostsData = await Post.findAll({
-            where: { id: postId},
-            include: Comment,
+          where: { id: postId },
+          include: [
+            {
+              model: Comment,
+            }
+          ],
         });
-         console.log("/post/:id with user: ", dbPostsData);
-        const postsData = dbPostsData.map((post, index)=> {
-             console.log(index, "/post/:id with comments: ",  post.comments);
-             post.comments?.forEach(element => {
-                console.log('comment ==> ', element);
+        //  console.log("/post/:id with user: ", dbPostsData);
+        const postsData = await  dbPostsData.map((post, index)=> {
+             console.log(index, "/post/:id with comments: ",  post);
+             post.comments?.forEach(async element => {
+                // console.log('comment ==> ', element);
+               const userName = await User.findOne({
+                where: {id: element.id}
+               });
+               post.comments.userName = userName;
+               console.log("comment creator is: ", post, userName);
              });
             return post.get({ plain: true});
         });
-        // console.log("PostsData with user: ", postsData);
+        console.log("comments with username &%&%: ", postsData);
         // console.log("postData: ", postsData);
-        res.render('home', {
+        res.render('viewPost', {
             postsData,
             loggedIn: req.session.loggedIn,
         });

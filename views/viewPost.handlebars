@@ -1,0 +1,13 @@
+<section class="post-container">
+<h1>View Post</h1>
+
+{{!-- pass in data from controllers --}}
+{{#each postsData as |post|}}
+    {{> post-details}}
+
+    {{#each post.comments as |comment|}} 
+    {{> comment-details}}
+    {{/each}}
+{{/each}}
+
+</section>

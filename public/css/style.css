@@ -88,3 +88,21 @@ nav a:hover {
     text-align: right;
     font-size: 75%;    
 }
+
+section.comment {
+  border: 2px solid #333;
+  margin: 10px;
+  box-shadow: 2px 2px 5px 2px #b3a0df;
+}
+
+.comment-title {
+    text-align: left;
+    padding: 10px;
+    font-size: 85%;
+}
+
+.comment-footer {
+    text-align: right;
+    padding: 10px;
+    font-size: 75%;
+}
