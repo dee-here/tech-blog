@@ -2,19 +2,18 @@ const router = require('express').Router();
 const {User, Post, Comment } = require('../models');
 const withAuth = require('../utils/auth');
 
-//use utils for auth ?!!
-
 router.get('/', async (req, res) => {
     try {
         const dbPostsData = await Post.findAll({
-            include: User
+            include: User,
         });
-        console.log("dbPostsData with user: ", dbPostsData);
+        // console.log("dbPostsData with user: ", dbPostsData.User.username);
         const postsData = dbPostsData.map((post)=> {
+            // console.log("dbPostsData with user: ", post?.user?.username);
             return post.get({ plain: true});
         });
-        console.log("PostsData with user: ", postsData);
-        console.log("postData: ", postsData);
+        // console.log("PostsData with user: ", postsData);
+        // console.log("postData: ", postsData);
         res.render('home', {
             postsData,
             loggedIn: req.session.loggedIn,
@@ -48,18 +47,91 @@ router.get("/signin", async (req, res) => {
 
 router.get('/dashboard', withAuth, async (req, res) => {
     try {
-        const dbUserData = await User.findByPk(req.session.userId,{
-            include: [Post]});
-        console.log("dbPostData: ", dbUserData);
-        console.log('check if re has session and loggedin !!', req.session.loggedIn);
-        const userData = dbUserData.get({plain: true})
-        // const postsData = dbPostsData.map((post)=> {
-        //     // console.log("inside map: with post: ", post);
-        //     return post.get({ plain: true});
+        // const dbUserData = await User.findByPk(req.session.userId,{
+        //     include: [Post]});
+        // console.log("dbPostData: ", dbUserData);
+        // console.log('check if re has session and loggedin !!', req.session.loggedIn);
+        // const userData = dbUserData.get({plain: true})
+        // // const postsData = dbPostsData.map((post)=> {
+        // //     // console.log("inside map: with post: ", post);
+        // //     return post.get({ plain: true});
+        // // });
+
+        // const dbPostsData = await Post.findByPk(req.session.userId,{
+        //     include: User
         // });
-        
-        console.log("userData: ", userData);
-        res.render('dashboard');
+
+        const dbPostsData = await Post.findAll({
+            where: { user_id: req.session.userId},
+            include: User,
+        });
+        // console.log("dashbaord posts with User:***: ", dbPostsData);
+        // console.log("/dashbaord dbPostsData?.user?.username: ", dbPostsData?.user?.username);
+        const postsData = dbPostsData.map((post)=> {
+            // console.log("dbPostsData with user: ", post?.user?.username);
+            return post.get({ plain: true});
+        });
+        // console.log("PostsData with user: ", postsData);
+        // console.log("postData: ", postsData);
+        res.render('dashboard', {
+            postsData,
+            loggedIn: req.session.loggedIn,
+        });
+
+        // console.log("userData: ", userData);
+        // res.render('dashboard');
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+});
+
+router.get('/home', async (req, res) => {
+    try {
+        const dbPostsData = await Post.findAll({
+            include: User,
+        });
+        // console.log("dbPostsData with user: ", dbPostsData.User.username);
+        const postsData = dbPostsData.map((post)=> {
+            // console.log("dbPostsData with user: ", post?.user?.username);
+            return post.get({ plain: true});
+        });
+        // console.log("PostsData with user: ", postsData);
+        // console.log("postData: ", postsData);
+        res.render('home', {
+            postsData,
+            loggedIn: req.session.loggedIn,
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
+});
+
+router.get('/post/:id', withAuth, async (req, res) => {
+    try {
+
+        const postId = req.params.id;
+        const dbPostsData = await Post.findAll({
+            where: { id: postId},
+            include: Comment,
+        });
+         console.log("/post/:id with user: ", dbPostsData);
+        const postsData = dbPostsData.map((post, index)=> {
+             console.log(index, "/post/:id with comments: ",  post.comments);
+             post.comments?.forEach(element => {
+                console.log('comment ==> ', element);
+             });
+            return post.get({ plain: true});
+        });
+        // console.log("PostsData with user: ", postsData);
+        // console.log("postData: ", postsData);
+        res.render('home', {
+            postsData,
+            loggedIn: req.session.loggedIn,
+        });
 
     } catch (err) {
         console.log(err);

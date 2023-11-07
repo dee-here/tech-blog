@@ -23,6 +23,8 @@ router.post('/', async (req, res) => {
 
 //login
 router.post('/login', async (req, res) => {
+
+  console.log('/login called !!! ');
     try {
       const dbUserData = await User.findOne({
         where: {
@@ -48,6 +50,8 @@ router.post('/login', async (req, res) => {
   
       req.session.save(() => {
         req.session.loggedIn = true;
+        req.session.userId =  dbUserData.id;
+        // console.log('/login called -created session!! ', req.session.userId);
   
         res
           .status(200)
