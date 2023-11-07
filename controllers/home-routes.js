@@ -118,24 +118,24 @@ router.get('/post/:id', withAuth, async (req, res) => {
           where: { id: postId },
           include: [
             {
-              model: Comment,
+              model: User,
             }
           ],
         });
         //  console.log("/post/:id with user: ", dbPostsData);
-        const postsData = await  dbPostsData.map((post, index)=> {
-             console.log(index, "/post/:id with comments: ",  post);
-             post.comments?.forEach(async element => {
-                // console.log('comment ==> ', element);
-               const userName = await User.findOne({
-                where: {id: element.id}
-               });
-               post.comments.userName = userName;
-               console.log("comment creator is: ", post, userName);
-             });
+        const postsData = dbPostsData.map((post, index)=> {
+            //  console.log(index, "/post/:id with comments: ",  post);
+            //  post.comments?.forEach(async element => {
+            //     // console.log('comment ==> ', element);
+            //    const userName = await User.findOne({
+            //     where: {id: element.id}
+            //    });
+            //    post.comments.userName = userName;
+            //    console.log("comment creator is: ", post, userName);
+            //  });
             return post.get({ plain: true});
         });
-        console.log("comments with username &%&%: ", postsData);
+        // console.log("comments with username and User ?: ", postsData);
         // console.log("postData: ", postsData);
         res.render('viewPost', {
             postsData,
@@ -147,5 +147,43 @@ router.get('/post/:id', withAuth, async (req, res) => {
         res.status(500).json(err);
     }
 });
+
+// router.get('/post/:id', withAuth, async (req, res) => {
+//     try {
+
+//         const postId = req.params.id;
+//         const dbPostsData = await Post.findAll({
+//           where: { id: postId },
+//           include: [
+//             {
+//               model: Comment,
+//             }
+//           ],
+//         });
+//         //  console.log("/post/:id with user: ", dbPostsData);
+//         const postsData = dbPostsData.map((post, index)=> {
+//              console.log(index, "/post/:id with comments: ",  post);
+//              post.comments?.forEach(async element => {
+//                 // console.log('comment ==> ', element);
+//                const userName = await User.findOne({
+//                 where: {id: element.id}
+//                });
+//                post.comments.userName = userName;
+//                console.log("comment creator is: ", post, userName);
+//              });
+//             return post.get({ plain: true});
+//         });
+//         console.log("comments with username and User ?: ", postsData);
+//         // console.log("postData: ", postsData);
+//         res.render('viewPost', {
+//             postsData,
+//             loggedIn: req.session.loggedIn,
+//         });
+
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).json(err);
+//     }
+// });
 
 module.exports = router;

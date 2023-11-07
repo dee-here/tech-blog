@@ -1,9 +1,10 @@
-<h1>Dashboard</h1>
+
 {{!-- show only the logged in users posts --}}
 <section class="post-container">
+<h3>Dashboard</h3>
+<button type="button" class="btn btn-primary">Add Post</button>
 
-
-{{!-- pass in data from controllers --}}
+{{!-- pass in data from controllers  from dashbaord it should be Editing the post--}}
 {{#each postsData as |post|}}
 {{> post-details}}
 {{/each}}
