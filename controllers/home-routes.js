@@ -1,38 +1,33 @@
-const router = require('express').Router();
-const {User, Post, Comment } = require('../models');
-const withAuth = require('../utils/auth');
+const router = require("express").Router();
+const { User, Post, Comment } = require("../models");
+const withAuth = require("../utils/auth");
 
-router.get('/', async (req, res) => {
-    try {
-        const dbPostsData = await Post.findAll({
-            include: User,
-        });
-        // console.log("dbPostsData with user: ", dbPostsData.User.username);
-        const postsData = dbPostsData.map((post)=> {
-            // console.log("dbPostsData with user: ", post?.user?.username);
-            return post.get({ plain: true});
-        });
-        // console.log("PostsData with user: ", postsData);
-        // console.log("postData: ", postsData);
-        res.render('home', {
-            postsData,
-            loggedIn: req.session.loggedIn,
-        });
+router.get("/", async (req, res) => {
+  try {
+    const dbPostsData = await Post.findAll({
+      include: User,
+    });
+    const postsData = dbPostsData.map((post) => {
+      return post.get({ plain: true });
+    });
 
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(err);
-    }
+    res.render("home", {
+      postsData,
+      loggedIn: req.session.loggedIn,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
-router.get('/login', async (req, res) => {
+router.get("/login", async (req, res) => {
   if (req.session.loggedIn) {
-    res.redirect('/');
+    res.redirect("/");
     return;
   }
 
-  res.render('login');
-
+  res.render("login");
 });
 
 router.get("/signin", async (req, res) => {
@@ -44,120 +39,113 @@ router.get("/signin", async (req, res) => {
   res.render("signup");
 });
 
+router.get("/dashboard", withAuth, async (req, res) => {
+  try {
+    const dbPostsData = await Post.findAll({
+      where: { user_id: req.session.userId },
+      include: User,
+    });
 
-router.get('/dashboard', withAuth, async (req, res) => {
-    try {
-        // const dbUserData = await User.findByPk(req.session.userId,{
-        //     include: [Post]});
-        // console.log("dbPostData: ", dbUserData);
-        // console.log('check if re has session and loggedin !!', req.session.loggedIn);
-        // const userData = dbUserData.get({plain: true})
-        // // const postsData = dbPostsData.map((post)=> {
-        // //     // console.log("inside map: with post: ", post);
-        // //     return post.get({ plain: true});
-        // // });
+    const postsData = dbPostsData.map((post) => {
+      return post.get({ plain: true });
+    });
 
-        // const dbPostsData = await Post.findByPk(req.session.userId,{
-        //     include: User
-        // });
-
-        const dbPostsData = await Post.findAll({
-            where: { user_id: req.session.userId},
-            include: User,
-        });
-        // console.log("dashbaord posts with User:***: ", dbPostsData);
-        // console.log("/dashbaord dbPostsData?.user?.username: ", dbPostsData?.user?.username);
-        const postsData = dbPostsData.map((post)=> {
-            // console.log("dbPostsData with user: ", post?.user?.username);
-            return post.get({ plain: true});
-        });
-        // console.log("PostsData with user: ", postsData);
-        // console.log("postData: ", postsData);
-        res.render('dashboard', {
-            postsData,
-            loggedIn: req.session.loggedIn,
-        });
-
-        // console.log("userData: ", userData);
-        // res.render('dashboard');
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(err);
-    }
+    res.render("dashboard", {
+      postsData,
+      loggedIn: req.session.loggedIn,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
-router.get('/home', async (req, res) => {
-    try {
-        const dbPostsData = await Post.findAll({
-            include: User,
-        });
-        // console.log("dbPostsData with user: ", dbPostsData.User.username);
-        const postsData = dbPostsData.map((post)=> {
-            // console.log("dbPostsData with user: ", post?.user?.username);
-            return post.get({ plain: true});
-        });
-        // console.log("PostsData with user: ", postsData);
-        // console.log("postData: ", postsData);
-        res.render('home', {
-            postsData,
-            loggedIn: req.session.loggedIn,
-        });
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(err);
-    }
+router.get("/home", async (req, res) => {
+  try {
+    const dbPostsData = await Post.findAll({
+      include: User,
+    });
+    const postsData = dbPostsData.map((post) => {
+      return post.get({ plain: true });
+    });
+    res.render("home", {
+      postsData,
+      loggedIn: req.session.loggedIn,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
+//get a specific post details with its id
+router.get("/post/:id", withAuth, async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const dbPostsData = await Post.findAll({
+      where: { id: postId },
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
 
-router.get('/post/:id', withAuth, async (req, res) => {
-    try {
+    const postsData = dbPostsData.map((post) => {
+      return post.get({ plain: true });
+    });
 
-        const postId = req.params.id;
-        const dbPostsData = await Post.findAll({
-          where: { id: postId },
-          include: [
-            {
-              model: User,
-            }
-          ],
-        });
-        //  console.log("/post/:id with user: ", dbPostsData);
-        const postsData = dbPostsData.map((post, index)=> {
-            //  console.log(index, "/post/:id with comments: ",  post);
-            //  post.comments?.forEach(async element => {
-            //     // console.log('comment ==> ', element);
-            //    const userName = await User.findOne({
-            //     where: {id: element.id}
-            //    });
-            //    post.comments.userName = userName;
-            //    console.log("comment creator is: ", post, userName);
-            //  });
-            return post.get({ plain: true});
-        });
-        // console.log("comments with username and User ?: ", postsData);
-        // console.log("postData: ", postsData);
-        res.render('viewPost', {
-            postsData,
-            loggedIn: req.session.loggedIn,
-        });
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).json(err);
-    }
+    res.render("viewPost", {
+      postsData,
+      loggedIn: req.session.loggedIn,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 //create a post
-router.get('/posts/create', withAuth, async (req, res) => {
+router.get("/posts/create", withAuth, async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.redirect("/");
+    return;
+  }
+  res.render("createPost", { loggedIn: req.session.loggedIn });
+});
+
+//Edit a post with id
+router.get("/posts/edit/:id", withAuth, async (req, res) => {
+    console.log("Edit a post with id");
     if (!req.session.loggedIn) {
-      res.redirect('/');
+      res.redirect("/");
       return;
     }
-  
-    res.render('createPost', {loggedIn: req.session.loggedIn});
-  
+  //get the post info and pass it into handlebars
+
+  try {
+    const postId = req.params.id;
+    const dbPostsData = await Post.findAll({
+      where: { id: postId },
+    //   include: [
+    //     {
+    //       model: User,
+    //     },
+    //   ],
+    });
+    const postData = dbPostsData.map((post) => {
+      console.log("edit post with: ", post);
+      return post.get({ plain: true });
+    });
+    const postToEdit = postData[0];
+    //console.log("edit post with: ", postData, postData[0]);
+    res.render("editPosts", {postToEdit, loggedIn: req.session.loggedIn });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+
+    
   });
 
 module.exports = router;
