@@ -9,7 +9,7 @@ router.post('/posts/create', withAuth, async (req, res) => {
         const newPost = await Post.create({
             title: req.body.title,
             text: req.body.content,
-            user_id: req.session.userId
+            user_id: req.session.userId,
         });
         console.log('new post created : ', newPost);
         console.log("req.body.title ", req.body.title);
@@ -23,10 +23,4 @@ router.post('/posts/create', withAuth, async (req, res) => {
     }
 });
 
-// router.post("/posts/create", withAuth, async(res,res)=>{
-// // const newPost = await Post.create{
-// //     title: req.body.title,
-// //     user_id: req.session.userId
-// }
-
-// })
+module.exports = router;
