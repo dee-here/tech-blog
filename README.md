@@ -10,6 +10,9 @@ This involved configuring a working Express.js API to use Sequelize to interact 
 
 This app will follow the MVC paradigm in its architectural structure, using Handlebars.js as the templating language, Sequelize as the ORM, and the express-session npm package for authentication.
 
+## Usage
+Start by signing up. Once you are signed up , you can then later login if your session expires.
+
 
 ## Technology Used 
 
