@@ -119,36 +119,36 @@ router.get("/posts/create", withAuth, async (req, res) => {
 
 //Edit a post with id
 router.get("/posts/edit/:id", withAuth, async (req, res) => {
-    console.log("Edit a post with id");
-    if (!req.session.loggedIn) {
-      res.redirect("/");
-      return;
-    }
+  if (!req.session.loggedIn) {
+    res.redirect("/");
+    return;
+  }
   //get the post info and pass it into handlebars
 
   try {
     const postId = req.params.id;
     const dbPostsData = await Post.findAll({
       where: { id: postId },
-    //   include: [
-    //     {
-    //       model: User,
-    //     },
-    //   ],
     });
     const postData = dbPostsData.map((post) => {
-      console.log("edit post with: ", post);
       return post.get({ plain: true });
     });
     const postToEdit = postData[0];
-    //console.log("edit post with: ", postData, postData[0]);
-    res.render("editPosts", {postToEdit, loggedIn: req.session.loggedIn });
+    res.render("editPosts", { postToEdit, loggedIn: req.session.loggedIn });
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
   }
+});
 
-    
-  });
+//create a Comment
+router.get("/comments/create/:id", withAuth, async (req, res) => {
+  if (!req.session.loggedIn) {
+    res.redirect("/");
+    return;
+  }
+  const postId = req.params.id;
+  res.render("create-comment", {postId, loggedIn: req.session.loggedIn });
+});
 
 module.exports = router;

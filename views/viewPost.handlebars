@@ -1,10 +1,8 @@
 <section class="post-container">
-<p>View Post</p>
-
-{{!-- pass in data from controllers --}}
 {{#each postsData as |post|}}
+    <p>View Post</p>
+    <a href="/comments/create/{{post.id}}">Add Comment</a>
     {{> post-details}}
-
     {{#each post.comments as |comment|}} 
     {{> comment-details}}
     {{/each}}
