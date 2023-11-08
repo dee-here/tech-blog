@@ -24,7 +24,10 @@ This app will follow the MVC paradigm in its architectural structure, using Hand
 | Git | [https://git-scm.com/](https://git-scm.com/)     |   
  
 
-
+## Screen Shots
+![Screen shots](./assets/images/Screenshot%202023-11-07%20224814.png)
+![Screen shots](./assets/images/Screenshot%202023-11-07%20224832.png)
+![Screen shots](./assets/images/Screenshot%202023-11-07%20224847.png)
 
 ## Author Info
 
