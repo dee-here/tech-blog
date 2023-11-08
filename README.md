@@ -1,45 +1,39 @@
-# tech-blog
-CMS-style blog site similar to a Wordpress site, where developers can publish their blog posts and comment on other developers’ posts as well
+# Tech Blog
+![License Badge](https://img.shields.io/badge/License-MIT-yellow.svg)  
+
+
+## Description 
+
+This project was to create a CMS style tech blog where developers can publish their blog posts and comment on other developers’ posts as well. 
+
+This involved configuring a working Express.js API to use Sequelize to interact with a MySQL database.
+
+This app will follow the MVC paradigm in its architectural structure, using Handlebars.js as the templating language, Sequelize as the ORM, and the express-session npm package for authentication.
+
+
+## Technology Used 
+
+| Technology Used         | Resource URL           | 
+| ------------- |-------------| 
+| JavaScript    | [https://developer.mozilla.org/en-US/docs/Web/JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) | 
+| node.js    | [https://nodejs.org/en](https://nodejs.org/en) | 
+| mysql2    | [https://www.npmjs.com/package/mysql2](https://www.npmjs.com/package/mysql2) | 
+| Express.js    | [https://expressjs.com/](https://expressjs.com/) | 
+| Sequelize    | [https://sequelize.org/](https://sequelize.org/) | 
+| Handlebars    | [https://handlebarsjs.com/](https://handlebarsjs.com/) | 
+| Git | [https://git-scm.com/](https://git-scm.com/)     |   
+ 
 
 
 
-## PSEUDO-CODE
-Creating directories within the convention of MVC (Model-View-Control)
-- controllers, views, models folders
-- server.js
-### MODELS
-- Setting up your database
-- index to tie it all together
-- User, Post, Comments (Users <-> Posts/Comments one to many relationships)
-    - User -> id, username, password
-        - encrypt password, need some hooks
-    - Post -> id, title, description, date/timestamp(sequelize can do this for you, research!), fk_user_id
-    - Comments -> id, description, fk_post_id, fk_user_id
-### VIEWS
-- handlebarsjs
-- login/signup, homepage, dashboard, post(comments/newcomment-partial), new-post(edit-post)
-- folders for layouts and partials if you plan to use them
-    - layouts main? partials post/comment?
-### CONTROLLERS
-- routes! /api/ and home
-- index -> apiroutes, homeroutes
-- homeroutes -> (get) '/', '/login/', '/post/:id', '/user/:id'(for the dashboard)
-- /api/ index, user, (blog)post, comments
-    - get, post, put, delete
-    - index -> userroutes, postroutes, commentroutes
-    - (blog)post -> :id, title, description, (includes user)
-    - user -> :id, username, password
-    - comments -> :id, description (includes post/user), could do post.includes(comments)
-### Basics
-- server file, .env, .gitignore, readme
-- public (css, img, js)
-- config(connection)
-- db(schema)
-- seeds(index, postData?, commentData?)
-- utils(auth, helpers)
-### SERVER
-- NPMs: path, express, express-session, express-handlebars, sequelize, dotenv, 
-- middleware: 
-    - app.use express.json/urlencoded/static(public)
-    - engine, handlebars, helpers, session
-- session: secret, cookie
+## Author Info
+
+Deepak Sinha
+* [Portfolio](https://dee-here.github.io/portfolio/)
+* [Github](https://github.com/dee-here)
+* [Questions ](mailto:deepakdilse@gmail.com)
+
+## License
+![License Badge](https://img.shields.io/badge/License-MIT-yellow.svg)  
+
+[License Link](https://choosealicense.com/licenses/mit/)  
