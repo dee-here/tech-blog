@@ -110,6 +110,7 @@ router.get('/home', async (req, res) => {
     }
 });
 
+
 router.get('/post/:id', withAuth, async (req, res) => {
     try {
 
@@ -148,42 +149,15 @@ router.get('/post/:id', withAuth, async (req, res) => {
     }
 });
 
-// router.get('/post/:id', withAuth, async (req, res) => {
-//     try {
-
-//         const postId = req.params.id;
-//         const dbPostsData = await Post.findAll({
-//           where: { id: postId },
-//           include: [
-//             {
-//               model: Comment,
-//             }
-//           ],
-//         });
-//         //  console.log("/post/:id with user: ", dbPostsData);
-//         const postsData = dbPostsData.map((post, index)=> {
-//              console.log(index, "/post/:id with comments: ",  post);
-//              post.comments?.forEach(async element => {
-//                 // console.log('comment ==> ', element);
-//                const userName = await User.findOne({
-//                 where: {id: element.id}
-//                });
-//                post.comments.userName = userName;
-//                console.log("comment creator is: ", post, userName);
-//              });
-//             return post.get({ plain: true});
-//         });
-//         console.log("comments with username and User ?: ", postsData);
-//         // console.log("postData: ", postsData);
-//         res.render('viewPost', {
-//             postsData,
-//             loggedIn: req.session.loggedIn,
-//         });
-
-//     } catch (err) {
-//         console.log(err);
-//         res.status(500).json(err);
-//     }
-// });
+//create a post
+router.get('/posts/create', withAuth, async (req, res) => {
+    if (!req.session.loggedIn) {
+      res.redirect('/');
+      return;
+    }
+  
+    res.render('createPost', {loggedIn: req.session.loggedIn});
+  
+  });
 
 module.exports = router;

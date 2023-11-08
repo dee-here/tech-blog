@@ -25,7 +25,7 @@ Post.init(
         // allowNull: false,
         // unique: true,
         references: {
-            model: User,  //check if 'user'  works vs User.
+            model: User,
             key: 'id',
           }
       },
